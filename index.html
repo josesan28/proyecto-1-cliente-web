@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Series Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Header fijo -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-bracket">[</span>
+        SERIES
+        <span class="logo-accent">TRACKER</span>
+        <span class="logo-bracket">]</span>
+      </div>
+      <nav class="header-nav">
+        <button class="btn-nav" id="btn-nueva-serie">+ Nueva serie</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Barra de controles: búsqueda, orden, filtros -->
+  <div class="controls-bar">
+    <div class="controls-inner">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input
+          type="text"
+          id="input-busqueda"
+          class="input-search"
+          placeholder="Buscar series..."
+          autocomplete="off"
+        />
+      </div>
+      <div class="sort-wrap">
+        <select id="select-sort" class="input-select">
+          <option value="creado_a">Más recientes</option>
+          <option value="titulo">Título A–Z</option>
+          <option value="anio">Año</option>
+          <option value="episodios">Episodios</option>
+        </select>
+        <select id="select-order" class="input-select">
+          <option value="desc">↓ Desc</option>
+          <option value="asc">↑ Asc</option>
+        </select>
+      </div>
+      <button class="btn-export" id="btn-export-csv">↓ CSV</button>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+    <!-- Estado de carga -->
+    <div class="state-loading" id="state-loading">
+      <div class="loader-ring"></div>
+      <p>Cargando series...</p>
+    </div>
+
+    <!-- Estado vacío -->
+    <div class="state-empty hidden" id="state-empty">
+      <p class="empty-icon">◫</p>
+      <p class="empty-title">No hay series todavía</p>
+      <p class="empty-sub">Agrega tu primera serie con el botón de arriba</p>
+    </div>
+
+    <!-- Sin resultados de búsqueda -->
+    <div class="state-empty hidden" id="state-no-results">
+      <p class="empty-icon">⊘</p>
+      <p class="empty-title">Sin resultados</p>
+      <p class="empty-sub">Intenta con otro término de búsqueda</p>
+    </div>
+
+    <!-- Grid de tarjetas -->
+    <div class="series-grid" id="series-grid"></div>
+
+    <!-- Paginación -->
+    <div class="pagination" id="pagination"></div>
+  </main>
+</body>
+</html>
