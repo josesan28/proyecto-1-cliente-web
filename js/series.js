@@ -1,12 +1,12 @@
 // Estado de la vista
 const state = {
   page: 1,
-  limit: 12,
+  limit: 5,
   q: '',
   sort: 'creado_a',
   order: 'desc',
   totalPages: 1,
-  serieActivaId: null,  
+  serieActivaId: null,
 };
 
 // Cargar y renderizar series
