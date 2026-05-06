@@ -6,9 +6,9 @@
   --bg-raised:    #1a2238;
   --bg-modal:     #111827;
 
-  --blue-bright:  #669ff9;
-  --blue-mid:     #4b6eb9;
-  --blue-deep:    #4870de;
+  --blue-bright:  #3b82f6;
+  --blue-mid:     #2563eb;
+  --blue-deep:    #1d4ed8;
   --blue-glow:    rgba(59, 130, 246, 0.15);
 
   --accent-cyan:  #06b6d4;
@@ -573,7 +573,7 @@ body::before {
   margin-bottom: 8px;
 }
 
-/* Boxes de géneros */
+/* Géneros checkboxes */
 .generos-check-list {
   display: flex;
   flex-wrap: wrap;
@@ -856,6 +856,28 @@ body::before {
   from { transform: translateX(20px); opacity: 0; }
   to   { transform: translateX(0); opacity: 1; }
 }
+
+.nuevo-genero-wrap {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.nuevo-genero-wrap input {
+  flex: 1;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 6px 10px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.nuevo-genero-wrap input:focus { border-color: var(--border-focus); }
+.nuevo-genero-wrap input::placeholder { color: var(--text-muted); }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }

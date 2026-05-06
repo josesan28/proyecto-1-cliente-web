@@ -68,6 +68,10 @@ const api = {
     return request('GET', '/generos');
   },
 
+  createGenero(nombre) {
+    return request('POST', '/generos', { nombre });
+  },
+
   // Ratings
 
   getRatings(serieId) {

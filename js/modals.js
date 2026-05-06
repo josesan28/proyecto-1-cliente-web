@@ -56,6 +56,7 @@ function abrirModalEditarSerie(serie) {
   document.getElementById('serie-episodios').value = serie.episodios || '';
   document.getElementById('serie-descripcion').value = serie.descripcion || '';
   document.getElementById('form-serie-error').classList.add('hidden');
+  document.getElementById('serie-imagen').value = '';
 
   if (serie.image_path) {
     const preview = document.getElementById('imagen-preview');
@@ -146,7 +147,7 @@ function setupFilePreview() {
   });
 }
 
-// Modal: Detalle de serie con Ratings
+// Modal: Detalle con Ratings
 
 let serieDetalle = null;
 
@@ -363,7 +364,36 @@ async function confirmarEliminar() {
   }
 }
 
-window.abrirModalNuevaSerie  = abrirModalNuevaSerie;
+async function crearGeneroDesdeModal() {
+  const input = document.getElementById('nuevo-genero-input');
+  const errEl = document.getElementById('nuevo-genero-error');
+  const nombre = input.value.trim();
+
+  errEl.classList.add('hidden');
+
+  if (!nombre) {
+    errEl.textContent = 'Escribe un nombre para el género.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  try {
+    const nuevo = await api.createGenero(nombre);
+
+    const seleccionados = Array.from(document.querySelectorAll('.genero-check:checked')).map(c => parseInt(c.value));
+    generosCargados.push(nuevo);
+    seleccionados.push(nuevo.id);
+    renderGenerosCheckboxes(seleccionados);
+
+    input.value = '';
+    showToast(`Género "${nuevo.nombre}" creado`, 'success');
+  } catch (err) {
+    errEl.textContent = err.message;
+    errEl.classList.remove('hidden');
+  }
+}
+
+window.crearGeneroDesdeModal = crearGeneroDesdeModal;
 window.abrirModalEditarSerie = abrirModalEditarSerie;
 window.abrirDetalle = abrirDetalle;
 window.abrirConfirmarEliminar = abrirConfirmarEliminar;

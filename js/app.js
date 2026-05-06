@@ -18,6 +18,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Exportar CSV
   document.getElementById('btn-export-csv').addEventListener('click', exportarCSV);
 
+  // Límite de paginación
+  document.getElementById('select-limit').addEventListener('change', e => {
+    state.limit = parseInt(e.target.value);
+    state.page = 1;
+    cargarSeries();
+  });
+
+  // Nuevo género desde modal
+  document.getElementById('btn-agregar-genero').addEventListener('click', crearGeneroDesdeModal);
+  document.getElementById('nuevo-genero-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); crearGeneroDesdeModal(); }
+  });
+
   // Modal serie: cerrar
   document.getElementById('modal-serie-close').addEventListener('click', cerrarModalSerie);
   document.getElementById('btn-cancelar-serie').addEventListener('click', cerrarModalSerie);
@@ -29,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Modal serie: submit
   document.getElementById('form-serie').addEventListener('submit', manejarSubmitSerie);
 
-  // Modal detalle de serie: cerrar
+  // Modal detalle: cerrar
   document.getElementById('modal-detalle-close').addEventListener('click', cerrarDetalle);
   document.getElementById('modal-detalle').addEventListener('click', function (e) {
     if (e.target === this) cerrarDetalle();
@@ -38,8 +51,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Botones dentro del detalle
   document.getElementById('btn-editar-desde-detalle').addEventListener('click', () => {
     if (!serieDetalle) return;
+    const serie = serieDetalle;
     cerrarDetalle();
-    abrirModalEditarSerie(serieDetalle);
+    abrirModalEditarSerie(serie);
   });
 
   document.getElementById('btn-eliminar-desde-detalle').addEventListener('click', () => {

@@ -49,7 +49,12 @@
           <option value="asc">↑ Asc</option>
         </select>
       </div>
-      <button class="btn-export" id="btn-export-csv">CSV</button>
+      <select id="select-limit" class="input-select">
+        <option value="5">5 / pág</option>
+        <option value="10">10 / pág</option>
+        <option value="15">15 / pág</option>
+      </select>
+      <button class="btn-export" id="btn-export-csv">↓ CSV</button>
     </div>
   </div>
 
@@ -82,7 +87,7 @@
     <div class="pagination" id="pagination"></div>
   </main>
 
-  <!-- Modal de Crear / Editar serie -->
+  <!-- Modal: Crear / Editar serie -->
   <div class="modal-overlay hidden" id="modal-serie">
     <div class="modal">
       <div class="modal-header">
@@ -120,9 +125,14 @@
 
         <div class="form-row">
           <div class="form-group form-group--full">
-            <label for="serie-generos">Géneros</label>
+            <label>Géneros</label>
             <div class="generos-check-list" id="generos-check-list">
             </div>
+            <div class="nuevo-genero-wrap">
+              <input type="text" id="nuevo-genero-input" placeholder="Nuevo género..." autocomplete="off" />
+              <button type="button" class="btn btn-ghost btn-sm" id="btn-agregar-genero">+ Agregar</button>
+            </div>
+            <p class="form-error hidden" id="nuevo-genero-error"></p>
           </div>
         </div>
 
@@ -151,7 +161,7 @@
     </div>
   </div>
 
-  <!-- Modal: Detalle de serie y Ratings -->
+  <!-- Modal: Detalle / Ratings -->
   <div class="modal-overlay hidden" id="modal-detalle">
     <div class="modal modal--wide">
       <div class="modal-header">
