@@ -797,6 +797,18 @@ body::before {
 .btn-icon:hover { color: var(--text-primary); }
 .btn-icon.danger:hover { color: var(--accent-red); }
 
+/* Rating form */
+.rating-form {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.rating-inputs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

@@ -31,4 +31,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('modal-detalle').addEventListener('click', function (e) {
     if (e.target === this) cerrarDetalle();
   });
+  
+    document.getElementById('form-rating').addEventListener('submit', manejarSubmitRating);
 });

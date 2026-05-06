@@ -246,13 +246,99 @@ function crearItemRating(rt) {
   const acciones = document.createElement('div');
   acciones.className = 'rating-actions';
 
+  const btnEdit = document.createElement('button');
+  btnEdit.className = 'btn-icon';
+  btnEdit.textContent = '✎';
+  btnEdit.title = 'Editar';
+  btnEdit.addEventListener('click', () => cargarRatingEnForm(rt));
+
+  const btnDel = document.createElement('button');
+  btnDel.className = 'btn-icon danger';
+  btnDel.textContent = '✕';
+  btnDel.title = 'Eliminar';
+  btnDel.addEventListener('click', () => eliminarRating(rt.id));
+
+  acciones.appendChild(btnEdit);
+  acciones.appendChild(btnDel);
+
   item.appendChild(score);
   item.appendChild(content);
   item.appendChild(acciones);
   return item;
 }
 
+// ---------- CRUD Ratings ----------
+
+function cargarRatingEnForm(rt) {
+  document.getElementById('rating-id-edit').value = rt.id;
+  document.getElementById('rating-valor').value = rt.valoracion;
+  document.getElementById('rating-review').value = rt.review || '';
+  document.getElementById('btn-submit-rating').textContent = 'Actualizar rating';
+}
+
+function limpiarFormRating() {
+  document.getElementById('rating-id-edit').value = '';
+  document.getElementById('rating-valor').value = '';
+  document.getElementById('rating-review').value = '';
+  document.getElementById('btn-submit-rating').textContent = 'Agregar rating';
+  document.getElementById('form-rating-error').classList.add('hidden');
+}
+
+async function manejarSubmitRating(e) {
+  e.preventDefault();
+
+  if (!serieDetalle) return;
+
+  const errEl = document.getElementById('form-rating-error');
+  errEl.classList.add('hidden');
+
+  const valoracion = parseInt(document.getElementById('rating-valor').value);
+  const review = document.getElementById('rating-review').value.trim() || null;
+  const ratingIdEdit = document.getElementById('rating-id-edit').value;
+
+  if (isNaN(valoracion) || valoracion < 1 || valoracion > 10) {
+    errEl.textContent = 'La valoración debe ser un número entre 1 y 10.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  const btn = document.getElementById('btn-submit-rating');
+  btn.disabled = true;
+
+  try {
+    if (ratingIdEdit) {
+      await api.updateRating(serieDetalle.id, ratingIdEdit, { valoracion, review });
+      showToast('Rating actualizado', 'success');
+    } else {
+      await api.createRating(serieDetalle.id, { valoracion, review });
+      showToast('Rating agregado', 'success');
+    }
+    limpiarFormRating();
+    await cargarRatings(serieDetalle.id);
+  } catch (err) {
+    errEl.textContent = err.message;
+    errEl.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function eliminarRating(ratingId) {
+  if (!serieDetalle) return;
+  try {
+    await api.deleteRating(serieDetalle.id, ratingId);
+    showToast('Rating eliminado', 'success');
+    await cargarRatings(serieDetalle.id);
+  } catch (err) {
+    showToast('Error eliminando rating: ' + err.message, 'error');
+  }
+}
+
+window.manejarSubmitRating = manejarSubmitRating;
+window.eliminarRating = eliminarRating;
+
 window.abrirDetalle = abrirDetalle;
+window.cerrarDetalle = cerrarDetalle;
 window.abrirModalNuevaSerie = abrirModalNuevaSerie;
 window.abrirModalEditarSerie = abrirModalEditarSerie;
 window.cargarGeneros = cargarGeneros;

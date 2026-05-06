@@ -71,18 +71,18 @@ const api = {
   // Ratings
 
   getRatings(serieId) {
-    return request('GET', `/series/${serieId}/ratings`);
+    return request('GET', `/series/ratings/${serieId}`);
   },
 
   createRating(serieId, data) {
-    return request('POST', `/series/${serieId}/ratings`, data);
+    return request('POST', `/series/ratings/${serieId}`, data);
   },
 
   updateRating(serieId, ratingId, data) {
-    return request('PUT', `/series/${serieId}/ratings/${ratingId}`, data);
+    return request('PUT', `/series/ratings/${serieId}/${ratingId}`, data);
   },
 
   deleteRating(serieId, ratingId) {
-    return request('DELETE', `/series/${serieId}/ratings/${ratingId}`);
+    return request('DELETE', `/series/ratings/${serieId}/${ratingId}`);
   },
 };
