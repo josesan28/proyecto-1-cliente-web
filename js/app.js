@@ -11,15 +11,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Error cargando géneros:', err);
   }
 
-  // Cargar lista de series
-  try {
-    const data = await api.getSeries();
-    console.log('Series cargadas:', data?.data?.length || 0);
-  } catch (err) {
-    console.error('Error cargando series:', err);
-  }
+  // Cargar grid de series
+  cargarSeries();
 
-  // Botón "Nueva serie"
+  // Botón de Nueva serie
   document.getElementById('btn-nueva-serie').addEventListener('click', () => {
     console.log('Abrir modal de nueva serie (próximamente)');
   });
