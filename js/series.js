@@ -1,4 +1,3 @@
-// Estado de la vista
 const state = {
   page: 1,
   limit: 12,
@@ -8,21 +7,37 @@ const state = {
   totalPages: 1,
 };
 
-// Cargar y renderizar series 
+// Cargar y renderizar series
 
 async function cargarSeries() {
   mostrarEstado('loading');
 
   try {
-    const data = await api.getSeries({ page: state.page, limit: state.limit });
+    const data = await api.getSeries({
+      page:  state.page,
+      limit: state.limit,
+      q:     state.q,
+      sort:  state.sort,
+      order: state.order,
+    });
+
+    state.totalPages = data.total_pages || 1;
+
+    if (data.total === 0 && state.q) {
+      mostrarEstado('no-results');
+      renderPaginacion(0);
+      return;
+    }
 
     if (data.total === 0) {
       mostrarEstado('empty');
+      renderPaginacion(0);
       return;
     }
 
     mostrarEstado('grid');
     renderGrid(data.data);
+    renderPaginacion(data.total_pages);
 
   } catch (err) {
     mostrarEstado('empty');
@@ -97,7 +112,7 @@ function crearTarjeta(serie) {
   return card;
 }
 
-// Estados de UI 
+// Estados de UI
 
 function mostrarEstado(tipo) {
   document.getElementById('state-loading').classList.add('hidden');
@@ -121,4 +136,89 @@ function mostrarEstado(tipo) {
   }
 }
 
+// Búsqueda
+
+let debounceTimer;
+function setupBusqueda() {
+  const input = document.getElementById('input-busqueda');
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      state.q = input.value.trim();
+      state.page = 1;
+      cargarSeries();
+    }, 350);
+  });
+}
+
+// Ordenamiento
+
+function setupOrdenamiento() {
+  document.getElementById('select-sort').addEventListener('change', e => {
+    state.sort = e.target.value;
+    state.page = 1;
+    cargarSeries();
+  });
+
+  document.getElementById('select-order').addEventListener('change', e => {
+    state.order = e.target.value;
+    state.page = 1;
+    cargarSeries();
+  });
+}
+
+// Paginación
+
+function renderPaginacion(totalPages) {
+  const pag = document.getElementById('pagination');
+  pag.innerHTML = '';
+
+  if (totalPages <= 1) return;
+
+  // Botón anterior
+  const prev = document.createElement('button');
+  prev.className = 'page-btn';
+  prev.textContent = '←';
+  prev.disabled = state.page <= 1;
+  prev.addEventListener('click', () => irAPagina(state.page - 1));
+  pag.appendChild(prev);
+
+  const range = paginationRange(state.page, totalPages);
+  range.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'page-btn' + (p === state.page ? ' active' : '');
+    btn.textContent = p === '...' ? '…' : p;
+    btn.disabled = p === '...';
+    if (typeof p === 'number') {
+      btn.addEventListener('click', () => irAPagina(p));
+    }
+    pag.appendChild(btn);
+  });
+
+  const next = document.createElement('button');
+  next.className = 'page-btn';
+  next.textContent = '→';
+  next.disabled = state.page >= totalPages;
+  next.addEventListener('click', () => irAPagina(state.page + 1));
+  pag.appendChild(next);
+}
+
+function paginationRange(current, total) {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+
+  if (current <= 4) return [1, 2, 3, 4, 5, '...', total];
+  if (current >= total - 3) return [1, '...', total - 4, total - 3, total - 2, total - 1, total];
+
+  return [1, '...', current - 1, current, current + 1, '...', total];
+}
+
+function irAPagina(p) {
+  if (p < 1 || p > state.totalPages) return;
+  state.page = p;
+  cargarSeries();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 window.cargarSeries = cargarSeries;
+window.setupBusqueda = setupBusqueda;
+window.setupOrdenamiento = setupOrdenamiento;

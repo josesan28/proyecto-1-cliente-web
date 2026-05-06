@@ -1,9 +1,9 @@
-const API_URL = 'http://localhost:8080';
+//const API_URL = 'http://localhost:8080';
 
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('Series Tracker iniciado');
 
-  // Cargar géneros
+  // Cargar géneros 
   try {
     const generos = await api.getGeneros();
     console.log('Géneros cargados:', generos.length);
@@ -11,10 +11,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Error cargando géneros:', err);
   }
 
-  // Cargar grid de series
+  // Cargar grid inicial
   cargarSeries();
 
-  // Botón de Nueva serie
+  // Activar búsqueda y ordenamiento
+  setupBusqueda();
+  setupOrdenamiento();
+
+  // Botón Nueva serie
   document.getElementById('btn-nueva-serie').addEventListener('click', () => {
     console.log('Abrir modal de nueva serie (próximamente)');
   });
