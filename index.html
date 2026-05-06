@@ -154,6 +154,36 @@
     </div>
   </div>
 
+    <!-- Modal de Detalle de serie -->
+  <div class="modal-overlay hidden" id="modal-detalle">
+    <div class="modal modal--wide">
+      <div class="modal-header">
+        <h2 class="modal-title" id="detalle-titulo">—</h2>
+        <button class="modal-close" id="modal-detalle-close">✕</button>
+      </div>
+
+      <div class="detalle-body">
+        <div class="detalle-left">
+          <img id="detalle-img" class="detalle-img hidden" alt="Portada" />
+          <div class="detalle-img-placeholder hidden" id="detalle-img-placeholder">◫</div>
+          <div class="detalle-meta" id="detalle-meta"></div>
+        </div>
+
+        <div class="detalle-right">
+          <p class="detalle-descripcion" id="detalle-descripcion"></p>
+          <div class="detalle-generos" id="detalle-generos"></div>
+
+          <div class="ratings-section">
+            <h3 class="ratings-title">Ratings</h3>
+            <div class="ratings-list" id="ratings-list">
+              <p class="ratings-empty">Sin ratings aún.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="js/api.js"></script>
   <script src="js/series.js"></script>
   <script src="js/modals.js"></script>

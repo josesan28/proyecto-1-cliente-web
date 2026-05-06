@@ -145,6 +145,114 @@ function setupFilePreview() {
   });
 }
 
+// Modal: Detalle de serie
+
+let serieDetalle = null;
+
+async function abrirDetalle(serieId) {
+  try {
+    serieDetalle = await api.getSerie(serieId);
+  } catch (err) {
+    showToast('Error cargando detalle: ' + err.message, 'error');
+    return;
+  }
+
+  document.getElementById('detalle-titulo').textContent = serieDetalle.titulo;
+
+  const img = document.getElementById('detalle-img');
+  const ph  = document.getElementById('detalle-img-placeholder');
+  if (serieDetalle.image_path) {
+    img.src = `${API_URL}${serieDetalle.image_path}`;
+    img.classList.remove('hidden');
+    ph.classList.add('hidden');
+  } else {
+    img.classList.add('hidden');
+    ph.classList.remove('hidden');
+  }
+
+  const meta = document.getElementById('detalle-meta');
+  meta.innerHTML = '';
+  if (serieDetalle.anio)      meta.innerHTML += `<span>Año:</span> ${serieDetalle.anio}<br>`;
+  if (serieDetalle.episodios) meta.innerHTML += `<span>Episodios:</span> ${serieDetalle.episodios}<br>`;
+
+  document.getElementById('detalle-descripcion').textContent =
+    serieDetalle.descripcion || 'Sin descripción.';
+
+  const gEl = document.getElementById('detalle-generos');
+  gEl.innerHTML = '';
+  (serieDetalle.generos || []).forEach(g => {
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.textContent = g.nombre;
+    gEl.appendChild(tag);
+  });
+
+  await cargarRatings(serieDetalle.id);
+
+  document.getElementById('modal-detalle').classList.remove('hidden');
+}
+
+function cerrarDetalle() {
+  document.getElementById('modal-detalle').classList.add('hidden');
+  serieDetalle = null;
+}
+
+// Ratings
+
+async function cargarRatings(serieId) {
+  const lista = document.getElementById('ratings-list');
+  lista.innerHTML = '';
+
+  try {
+    const ratings = await api.getRatings(serieId);
+
+    if (!ratings || ratings.length === 0) {
+      lista.innerHTML = '<p class="ratings-empty">Sin ratings aún.</p>';
+      return;
+    }
+
+    ratings.forEach(rt => {
+      lista.appendChild(crearItemRating(rt));
+    });
+
+  } catch {
+    lista.innerHTML = '<p class="ratings-empty">Error cargando ratings.</p>';
+  }
+}
+
+function crearItemRating(rt) {
+  const item = document.createElement('div');
+  item.className = 'rating-item';
+  item.dataset.id = rt.id;
+
+  const score = document.createElement('div');
+  score.className = 'rating-score';
+  score.textContent = rt.valoracion;
+
+  const content = document.createElement('div');
+  content.className = 'rating-content';
+
+  const review = document.createElement('p');
+  review.className = 'rating-review';
+  review.textContent = rt.review || '—';
+
+  const fecha = document.createElement('p');
+  fecha.className = 'rating-date';
+  fecha.textContent = new Date(rt.creado_a).toLocaleDateString('es-GT');
+
+  content.appendChild(review);
+  content.appendChild(fecha);
+
+  const acciones = document.createElement('div');
+  acciones.className = 'rating-actions';
+
+  item.appendChild(score);
+  item.appendChild(content);
+  item.appendChild(acciones);
+  return item;
+}
+
+window.abrirDetalle = abrirDetalle;
 window.abrirModalNuevaSerie = abrirModalNuevaSerie;
 window.abrirModalEditarSerie = abrirModalEditarSerie;
 window.cargarGeneros = cargarGeneros;

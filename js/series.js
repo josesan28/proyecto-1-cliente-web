@@ -106,7 +106,7 @@ function crearTarjeta(serie) {
   card.appendChild(body);
 
   card.addEventListener('click', () => {
-    console.log('Abrir detalle de serie:', serie.id);
+    abrirDetalle(serie.id);
   });
 
   return card;
@@ -239,3 +239,4 @@ window.showToast = showToast;
 window.cargarSeries = cargarSeries;
 window.setupBusqueda = setupBusqueda;
 window.setupOrdenamiento = setupOrdenamiento;
+window.abrirDetalle = abrirDetalle;

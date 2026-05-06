@@ -25,4 +25,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Modal serie: submit
   document.getElementById('form-serie').addEventListener('submit', manejarSubmitSerie);
+
+    // Modal detalle: cerrar
+  document.getElementById('modal-detalle-close').addEventListener('click', cerrarDetalle);
+  document.getElementById('modal-detalle').addEventListener('click', function (e) {
+    if (e.target === this) cerrarDetalle();
+  });
 });
