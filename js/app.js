@@ -1,25 +1,28 @@
 //const API_URL = 'http://localhost:8080';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('Series Tracker iniciado');
 
-  // Cargar géneros 
-  try {
-    const generos = await api.getGeneros();
-    console.log('Géneros cargados:', generos.length);
-  } catch (err) {
-    console.error('Error cargando géneros:', err);
-  }
+  await cargarGeneros();
 
-  // Cargar grid inicial
   cargarSeries();
 
-  // Activar búsqueda y ordenamiento
   setupBusqueda();
   setupOrdenamiento();
+  setupFilePreview();
 
-  // Botón Nueva serie
+  // Header
   document.getElementById('btn-nueva-serie').addEventListener('click', () => {
-    console.log('Abrir modal de nueva serie (próximamente)');
+    abrirModalNuevaSerie();
   });
+
+  // Modal serie: cerrar
+  document.getElementById('modal-serie-close').addEventListener('click', cerrarModalSerie);
+  document.getElementById('btn-cancelar-serie').addEventListener('click', cerrarModalSerie);
+
+  document.getElementById('modal-serie').addEventListener('click', function (e) {
+    if (e.target === this) cerrarModalSerie();
+  });
+
+  // Modal serie: submit
+  document.getElementById('form-serie').addEventListener('submit', manejarSubmitSerie);
 });

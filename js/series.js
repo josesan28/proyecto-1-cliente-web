@@ -219,6 +219,23 @@ function irAPagina(p) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// Toast
+
+function showToast(msg, tipo = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${tipo}`;
+  toast.textContent = msg;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.3s';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+window.showToast = showToast;
 window.cargarSeries = cargarSeries;
 window.setupBusqueda = setupBusqueda;
 window.setupOrdenamiento = setupOrdenamiento;
