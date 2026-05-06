@@ -1,3 +1,4 @@
+// Modal: Crear / Editar serie
 let generosCargados = [];
 
 async function cargarGeneros() {
@@ -145,7 +146,7 @@ function setupFilePreview() {
   });
 }
 
-// Modal: Detalle de serie
+// Modal: Detalle de serie con Ratings
 
 let serieDetalle = null;
 
@@ -186,6 +187,8 @@ async function abrirDetalle(serieId) {
     tag.textContent = g.nombre;
     gEl.appendChild(tag);
   });
+
+  limpiarFormRating();
 
   await cargarRatings(serieDetalle.id);
 
@@ -266,8 +269,6 @@ function crearItemRating(rt) {
   item.appendChild(acciones);
   return item;
 }
-
-// ---------- CRUD Ratings ----------
 
 function cargarRatingEnForm(rt) {
   document.getElementById('rating-id-edit').value = rt.id;
@@ -362,15 +363,8 @@ async function confirmarEliminar() {
   }
 }
 
-window.abrirConfirmarEliminar = abrirConfirmarEliminar;
-window.cerrarConfirmar = cerrarConfirmar;
-window.confirmarEliminar = confirmarEliminar;
-
-window.manejarSubmitRating = manejarSubmitRating;
-window.eliminarRating = eliminarRating;
-
-window.abrirDetalle = abrirDetalle;
-window.cerrarDetalle = cerrarDetalle;
-window.abrirModalNuevaSerie = abrirModalNuevaSerie;
+window.abrirModalNuevaSerie  = abrirModalNuevaSerie;
 window.abrirModalEditarSerie = abrirModalEditarSerie;
+window.abrirDetalle = abrirDetalle;
+window.abrirConfirmarEliminar = abrirConfirmarEliminar;
 window.cargarGeneros = cargarGeneros;

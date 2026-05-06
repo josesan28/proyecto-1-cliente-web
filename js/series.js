@@ -1,3 +1,4 @@
+// Estado de la vista
 const state = {
   page: 1,
   limit: 12,
@@ -5,6 +6,7 @@ const state = {
   sort: 'creado_a',
   order: 'desc',
   totalPages: 1,
+  serieActivaId: null,  
 };
 
 // Cargar y renderizar series
@@ -41,7 +43,7 @@ async function cargarSeries() {
 
   } catch (err) {
     mostrarEstado('empty');
-    console.error('Error cargando series:', err);
+    showToast('Error cargando series: ' + err.message, 'error');
   }
 }
 
@@ -105,66 +107,9 @@ function crearTarjeta(serie) {
   card.appendChild(imgWrap);
   card.appendChild(body);
 
-  card.addEventListener('click', () => {
-    abrirDetalle(serie.id);
-  });
+  card.addEventListener('click', () => abrirDetalle(serie.id));
 
   return card;
-}
-
-// Estados de UI
-
-function mostrarEstado(tipo) {
-  document.getElementById('state-loading').classList.add('hidden');
-  document.getElementById('state-empty').classList.add('hidden');
-  document.getElementById('state-no-results').classList.add('hidden');
-  document.getElementById('series-grid').classList.add('hidden');
-
-  switch (tipo) {
-    case 'loading':
-      document.getElementById('state-loading').classList.remove('hidden');
-      break;
-    case 'empty':
-      document.getElementById('state-empty').classList.remove('hidden');
-      break;
-    case 'no-results':
-      document.getElementById('state-no-results').classList.remove('hidden');
-      break;
-    case 'grid':
-      document.getElementById('series-grid').classList.remove('hidden');
-      break;
-  }
-}
-
-// Búsqueda
-
-let debounceTimer;
-function setupBusqueda() {
-  const input = document.getElementById('input-busqueda');
-  input.addEventListener('input', () => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      state.q = input.value.trim();
-      state.page = 1;
-      cargarSeries();
-    }, 350);
-  });
-}
-
-// Ordenamiento
-
-function setupOrdenamiento() {
-  document.getElementById('select-sort').addEventListener('change', e => {
-    state.sort = e.target.value;
-    state.page = 1;
-    cargarSeries();
-  });
-
-  document.getElementById('select-order').addEventListener('change', e => {
-    state.order = e.target.value;
-    state.page = 1;
-    cargarSeries();
-  });
 }
 
 // Paginación
@@ -219,6 +164,107 @@ function irAPagina(p) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// Estados de UI
+
+function mostrarEstado(tipo) {
+  document.getElementById('state-loading').classList.add('hidden');
+  document.getElementById('state-empty').classList.add('hidden');
+  document.getElementById('state-no-results').classList.add('hidden');
+  document.getElementById('series-grid').classList.add('hidden');
+
+  switch (tipo) {
+    case 'loading':
+      document.getElementById('state-loading').classList.remove('hidden');
+      break;
+    case 'empty':
+      document.getElementById('state-empty').classList.remove('hidden');
+      break;
+    case 'no-results':
+      document.getElementById('state-no-results').classList.remove('hidden');
+      break;
+    case 'grid':
+      document.getElementById('series-grid').classList.remove('hidden');
+      break;
+  }
+}
+
+// Búsqueda con debounce
+
+let debounceTimer;
+function setupBusqueda() {
+  const input = document.getElementById('input-busqueda');
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      state.q = input.value.trim();
+      state.page = 1;
+      cargarSeries();
+    }, 350);
+  });
+}
+
+// Ordenamiento
+
+function setupOrdenamiento() {
+  document.getElementById('select-sort').addEventListener('change', e => {
+    state.sort = e.target.value;
+    state.page = 1;
+    cargarSeries();
+  });
+
+  document.getElementById('select-order').addEventListener('change', e => {
+    state.order = e.target.value;
+    state.page = 1;
+    cargarSeries();
+  });
+}
+
+// Exportar CSV
+
+async function exportarCSV() {
+  try {
+    const data = await api.getSeries({ page: 1, limit: 1000 });
+    const series = data.data;
+
+    const headers = ['ID', 'Título', 'Año', 'Episodios', 'Descripción', 'Géneros', 'Creado'];
+
+    function escaparCSV(val) {
+      if (val == null) return '';
+      const str = String(val);
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    }
+
+    const filas = series.map(s => [
+      s.id,
+      escaparCSV(s.titulo),
+      s.anio ?? '',
+      s.episodios ?? '',
+      escaparCSV(s.descripcion),
+      escaparCSV((s.generos || []).map(g => g.nombre).join(' | ')),
+      new Date(s.creado_a).toLocaleDateString('es-GT'),
+    ].join(','));
+
+    const csv = [headers.join(','), ...filas].join('\n');
+
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `series-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast('CSV exportado correctamente', 'success');
+  } catch (err) {
+    showToast('Error exportando CSV: ' + err.message, 'error');
+  }
+}
+
 // Toast
 
 function showToast(msg, tipo = 'info') {
@@ -235,8 +281,6 @@ function showToast(msg, tipo = 'info') {
   }, 3000);
 }
 
-window.showToast = showToast;
 window.cargarSeries = cargarSeries;
-window.setupBusqueda = setupBusqueda;
-window.setupOrdenamiento = setupOrdenamiento;
-window.abrirDetalle = abrirDetalle;
+window.showToast = showToast;
+window.state = state;
