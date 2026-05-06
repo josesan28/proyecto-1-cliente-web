@@ -167,6 +167,10 @@
           <img id="detalle-img" class="detalle-img hidden" alt="Portada" />
           <div class="detalle-img-placeholder hidden" id="detalle-img-placeholder">◫</div>
           <div class="detalle-meta" id="detalle-meta"></div>
+          <div class="detalle-acciones">
+            <button class="btn btn-ghost btn-sm" id="btn-editar-desde-detalle">Editar</button>
+            <button class="btn btn-danger btn-sm" id="btn-eliminar-desde-detalle">Eliminar</button>
+          </div>
         </div>
 
         <div class="detalle-right">
@@ -198,6 +202,20 @@
         </div>
       </div>
     </div>
+      <!-- Modal: Confirmación de eliminación -->
+  <div class="modal-overlay hidden" id="modal-confirmar">
+    <div class="modal modal--sm">
+      <div class="modal-header">
+        <h2 class="modal-title">¿Eliminar serie?</h2>
+        <button class="modal-close" id="modal-confirmar-close">✕</button>
+      </div>
+      <p class="confirm-text">Esta acción no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btn-cancelar-eliminar">Cancelar</button>
+        <button class="btn btn-danger" id="btn-confirmar-eliminar">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
   </div>
 
   <script src="js/api.js"></script>

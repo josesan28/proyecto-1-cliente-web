@@ -33,4 +33,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   
     document.getElementById('form-rating').addEventListener('submit', manejarSubmitRating);
+
+    // Botones dentro del detalle
+  document.getElementById('btn-editar-desde-detalle').addEventListener('click', () => {
+    if (!serieDetalle) return;
+    cerrarDetalle();
+    abrirModalEditarSerie(serieDetalle);
+  });
+
+  document.getElementById('btn-eliminar-desde-detalle').addEventListener('click', () => {
+    if (!serieDetalle) return;
+    abrirConfirmarEliminar(serieDetalle);
+  });
+
+  // Modal confirmar: botones
+  document.getElementById('modal-confirmar-close').addEventListener('click', cerrarConfirmar);
+  document.getElementById('btn-cancelar-eliminar').addEventListener('click', cerrarConfirmar);
+  document.getElementById('btn-confirmar-eliminar').addEventListener('click', confirmarEliminar);
+  document.getElementById('modal-confirmar').addEventListener('click', function (e) {
+    if (e.target === this) cerrarConfirmar();
+  });
 });

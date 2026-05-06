@@ -334,6 +334,38 @@ async function eliminarRating(ratingId) {
   }
 }
 
+// Modal: Confirmación de eliminación
+
+let serieParaEliminar = null;
+
+function abrirConfirmarEliminar(serie) {
+  serieParaEliminar = serie;
+  document.getElementById('modal-confirmar').classList.remove('hidden');
+}
+
+function cerrarConfirmar() {
+  document.getElementById('modal-confirmar').classList.add('hidden');
+  serieParaEliminar = null;
+}
+
+async function confirmarEliminar() {
+  if (!serieParaEliminar) return;
+
+  try {
+    await api.deleteSerie(serieParaEliminar.id);
+    showToast('Serie eliminada', 'success');
+    cerrarConfirmar();
+    cerrarDetalle();
+    cargarSeries();
+  } catch (err) {
+    showToast('Error eliminando: ' + err.message, 'error');
+  }
+}
+
+window.abrirConfirmarEliminar = abrirConfirmarEliminar;
+window.cerrarConfirmar = cerrarConfirmar;
+window.confirmarEliminar = confirmarEliminar;
+
 window.manejarSubmitRating = manejarSubmitRating;
 window.eliminarRating = eliminarRating;
 

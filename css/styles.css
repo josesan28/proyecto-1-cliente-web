@@ -809,6 +809,15 @@ body::before {
   margin-bottom: 10px;
 }
 
+/* Modal small */
+.modal--sm  { max-width: 380px; }
+
+.confirm-text {
+  padding: 0 24px 16px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
